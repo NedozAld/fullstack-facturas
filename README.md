@@ -21,8 +21,8 @@
 
 ### 1. Clonar el repositorio
 ```bash
-git clone <URL_DEL_REPOSITORIO>
-cd full-stack
+git clone https://github.com/NedozAld/fullstack-facturas.git
+cd fullstack-facturas
 ```
 
 ### 2. Backend
@@ -41,7 +41,7 @@ npm install
 ```bash
 npm start
 ```
-El backend se ejecutará normalmente en `http://localhost:3001`.
+El backend se ejecutará normalmente en `http://localhost:3000`.
 
 ### 3. Frontend
 
