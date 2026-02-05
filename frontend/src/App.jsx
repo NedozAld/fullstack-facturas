@@ -1,12 +1,20 @@
 
+import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import ClienteCrud from './ClienteCrud';
+import ProductoCrud from './ProductoCrud';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Gestión de Clientes</h1>
-      <ClienteCrud />
+    <div className="app-shell">
+      <main className="app-main">
+        <Routes>
+          <Route path="/productos" element={<ProductoCrud />} />
+          <Route path="/clientes" element={<ClienteCrud />} />
+          <Route path="/" element={<Navigate to="/productos" replace />} />
+          <Route path="*" element={<Navigate to="/productos" replace />} />
+        </Routes>
+      </main>
     </div>
   );
 }
