@@ -1,0 +1,136 @@
+.facturas-layout {
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.facturas-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-stats {
+  border: none;
+  border-radius: 1rem;
+  transition: transform 0.25s ease;
+}
+
+.card-stats:hover {
+  transform: translateY(-4px);
+}
+
+.icon-pill {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: rgba(13, 110, 253, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.9rem;
+  font-size: 1.1rem;
+}
+
+.search-box {
+  border-radius: 999px;
+  padding-left: 2.75rem;
+  border: 1px solid #e5e7eb;
+  height: 48px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+}
+
+.filter-chip {
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 0.5rem 1.5rem;
+  background: #fff;
+  font-weight: 600;
+  color: #475569;
+  transition: all 0.2s ease;
+}
+
+.filter-chip.active {
+  background: #0d6efd;
+  color: #fff;
+  border-color: #0d6efd;
+  box-shadow: 0 0.35rem 1rem rgba(13, 110, 253, 0.25);
+}
+
+.table-container {
+  background: #fff;
+  border-radius: 1.25rem;
+  border: none;
+  overflow: hidden;
+}
+
+.table thead th {
+  background: #f8f9fa;
+  border-bottom: 2px solid #edf2f7;
+  color: #6c757d;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  padding: 1.1rem 1rem;
+  text-transform: uppercase;
+}
+
+.table tbody td {
+  padding: 1.1rem 1rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.status-badge {
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-paid {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.badge-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.badge-cancelled {
+  background-color: #f8d7da;
+  color: #842029;
+}
+
+.btn-view {
+  background-color: #f8f9fa;
+  color: #0d6efd;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.45rem 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.btn-view:hover {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .facturas-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .card-stats {
+    margin-bottom: 0.5rem;
+  }
+}
