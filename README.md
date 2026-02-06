@@ -66,4 +66,4 @@ La aplicación estará disponible en `http://localhost:5173` (o el puerto que in
 
 ---
 
-**Autor:** Tu Nombre
+**Autor:** Nedoz
