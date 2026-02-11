@@ -43,3 +43,13 @@ router.put('/productos/:proId', clienteProductoController.updateProducto);
 router.delete('/productos/:proId', clienteProductoController.deleteProducto);
 router.get('/productos', clienteProductoController.getProductos);
 router.get('/productos/:proId', clienteProductoController.getProductoById);
+
+
+const usuarioController = require('../controllers/usuario-controller');
+
+// ============ RUTAS DE USUARIOS ============
+router.post('/usuarios', usuarioController.createUsuario);
+router.get('/usuarios', usuarioController.getUsuarios);
+router.get('/usuarios/:id', usuarioController.getUsuarioById);
+router.put('/usuarios/:id', usuarioController.updateUsuario);
+router.delete('/usuarios/:id', usuarioController.deleteUsuario);

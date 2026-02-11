@@ -83,14 +83,13 @@ export default function ClienteCrud() {
 
   return (
     <div className="container py-5 animate__animated animate__fadeIn">
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
       <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
 
       <div className="row align-items-center mb-5">
         <div className="col-md-7">
           <h2 className="fw-bold text-dark mb-1">
-            <i className="fas fa-users text-primary me-2"></i>Cartera de Clientes
+            <i className="fas fa-users text-primary me-2"></i>Clientes
           </h2>
           <p className="text-muted mb-0">Gestiona y selecciona los clientes para los pedidos actuales.</p>
         </div>
@@ -148,10 +147,7 @@ export default function ClienteCrud() {
                     </span>
                   </td>
                   <td className="text-center pe-4">
-                    <button type="button" className="btn btn-sm btn-outline-primary fw-bold btn-select-client px-3 py-1 seleccionar-cliente me-2"
-                      onClick={() => window.alert(`Cliente #${c.cli_id} (${c.cli_nombre}) seleccionado.`)}>
-                      Seleccionar <i className="fas fa-arrow-right ms-1"></i>
-                    </button>
+
                     <button type="button" className="btn btn-sm btn-outline-warning fw-bold px-3 py-1 me-2" onClick={() => handleEdit(c)}>
                       <i className="fas fa-edit"></i> Editar
                     </button>
