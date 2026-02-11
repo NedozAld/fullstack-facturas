@@ -1,0 +1,45 @@
+const { Router } = require("express");
+const router = Router();
+
+
+const facturaController = require('../controllers/factura-controller');
+const clienteProductoController = require('../controllers/cliente-producto-controller');
+
+// Ruta principal
+router.get('/', (req, res) => {
+    res.send('Bienvenido a mi API de facturación');
+});
+
+// ============ RUTAS DE AUTENTICACION ============
+router.use('/', require('./auth-routes'));
+
+// ============ RUTAS DE FACTURAS ============
+router.post('/facturas', facturaController.createFactura);
+router.put('/facturas/:facId', facturaController.updateFactura);
+router.delete('/facturas/:facId', facturaController.deleteFactura);
+router.get('/facturas', facturaController.getFacturas);
+router.get('/facturas/:facId', facturaController.getFacturaById);
+
+router.post('/facturas/:facId/productos', facturaController.addProductoToFactura);
+router.delete('/facturas/:facId/productos/:proId', facturaController.removeProductoFromFactura);
+
+router.get('/consultas/clientes-facturas', facturaController.clientesFacturas);
+router.get('/consultas/factura/:facId/productos', facturaController.facturaProductosById);
+router.get('/consultas/cliente/:cliId/facturas-productos', facturaController.facturasProductosByCliente);
+
+module.exports = router;
+
+
+// ============ RUTAS DE CLIENTES ============
+router.post('/clientes', clienteProductoController.createCliente);
+router.put('/clientes/:cliId', clienteProductoController.updateCliente);
+router.delete('/clientes/:cliId', clienteProductoController.deleteCliente);
+router.get('/clientes', clienteProductoController.getClientes);
+router.get('/clientes/:cliId', clienteProductoController.getClienteById);
+
+// ============ RUTAS DE PRODUCTOS ============
+router.post('/productos', clienteProductoController.createProducto);
+router.put('/productos/:proId', clienteProductoController.updateProducto);
+router.delete('/productos/:proId', clienteProductoController.deleteProducto);
+router.get('/productos', clienteProductoController.getProductos);
+router.get('/productos/:proId', clienteProductoController.getProductoById);
