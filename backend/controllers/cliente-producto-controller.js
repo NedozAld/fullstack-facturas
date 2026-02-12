@@ -69,9 +69,9 @@ async function getClienteById(req, res) {
 
 // Crear producto
 async function createProducto(req, res) {
-    const { pro_nombre, pro_pvp, pro_estado } = req.body;
+    const { pro_nombre, pro_pvp, pro_estado, pro_impuesto } = req.body;
     try {
-        const producto = await Producto.create({ pro_nombre, pro_pvp, pro_estado });
+        const producto = await Producto.create({ pro_nombre, pro_pvp, pro_estado, pro_impuesto });
         res.status(201).json(producto);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -81,13 +81,14 @@ async function createProducto(req, res) {
 // Actualizar producto
 async function updateProducto(req, res) {
     const proId = parseInt(req.params.proId, 10);
-    const { pro_nombre, pro_pvp, pro_estado } = req.body;
+    const { pro_nombre, pro_pvp, pro_estado, pro_impuesto } = req.body;
     try {
         const producto = await Producto.findByPk(proId);
         if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
         await producto.update({
             pro_nombre: pro_nombre ?? producto.pro_nombre,
             pro_pvp: pro_pvp ?? producto.pro_pvp,
+            pro_impuesto: pro_impuesto ?? producto.pro_impuesto,
             pro_estado: pro_estado ?? producto.pro_estado,
         });
         res.json(producto);

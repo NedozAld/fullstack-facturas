@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export const getUsuarios = () => axios.get(`${API_URL}/usuarios`);
 export const getUsuarioById = (id) => axios.get(`${API_URL}/usuarios/${id}`);

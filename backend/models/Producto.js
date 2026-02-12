@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(8, 2),
       allowNull: false,
     },
+    pro_impuesto: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: false,
+      defaultValue: 15.00,
+    },
     pro_estado: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

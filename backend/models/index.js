@@ -12,6 +12,13 @@ const sequelize = new Sequelize(
   }
 );
 
+console.log('DB Config:', {
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  // pass: process.env.DB_PASS ? '****' : 'undefined' 
+});
+
 // Importar modelos (ahora son funciones que reciben sequelize y DataTypes)
 const ClienteModel = require('./Cliente');
 const ProductoModel = require('./Producto');

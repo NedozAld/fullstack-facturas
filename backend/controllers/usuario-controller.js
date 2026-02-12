@@ -31,6 +31,7 @@ exports.getUsuarios = async (req, res) => {
         const usuarios = await Usuario.findAll({
             include: [{ model: Cliente }] // Incluir datos del cliente asociado si existe
         });
+        console.log('Usuarios found:', JSON.stringify(usuarios, null, 2));
         res.json(usuarios);
     } catch (error) {
         console.error('Error al obtener usuarios:', error);

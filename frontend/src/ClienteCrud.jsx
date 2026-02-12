@@ -1,6 +1,6 @@
-
 import React, { useEffect, useState } from 'react';
 import { getClientes, createCliente, updateCliente, deleteCliente } from './apiCliente';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const initialForm = { cli_nombre: '', cli_correo: '', cli_estado: true };
 
@@ -81,226 +81,209 @@ export default function ClienteCrud() {
 
   const getAvatar = nombre => nombre ? nombre[0].toUpperCase() : '?';
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: 'spring', stiffness: 100 }
+    }
+  };
+
   return (
-    <div className="container py-5 animate__animated animate__fadeIn">
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
-
-      <div className="row align-items-center mb-5">
-        <div className="col-md-7">
-          <h2 className="fw-bold text-dark mb-1">
-            <i className="fas fa-users text-primary me-2"></i>Clientes
-          </h2>
-          <p className="text-muted mb-0">Gestiona y selecciona los clientes para los pedidos actuales.</p>
+    <div className="max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Gestión de Clientes</h1>
+          <p className="text-gray-500 mt-1">Gestiona y selecciona los clientes para los pedidos.</p>
         </div>
-        <div className="col-md-5 text-md-end mt-4 mt-md-0">
-          <button className="btn btn-success btn-lg shadow-sm fw-bold rounded-pill px-4 py-2" onClick={() => { setShowModal(true); setEditId(null); setForm(initialForm); }}>
-            <i className="fas fa-user-plus me-2"></i> Nuevo Cliente
-          </button>
-        </div>
-      </div>
-
-      <div className="table-container">
-        <div className="p-4 border-bottom bg-white">
-          <div className="search-container">
-            <i className="fas fa-search search-icon"></i>
-            <input type="text" className="form-control" placeholder="Busca por nombre o correo electrónico..." value={search} onChange={e => setSearch(e.target.value)} />
+        <div className="flex gap-3 w-full md:w-auto">
+          <div className="relative flex-1 md:w-64">
+            <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input
+              type="text"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
+              placeholder="Buscar cliente..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
           </div>
-        </div>
-
-        <div className="table-responsive">
-          <table className="table table-hover align-middle mb-0" id="tablaClientes">
-            <thead>
-              <tr>
-                <th className="ps-4">ID</th>
-                <th>Cliente (Nombre / Correo)</th>
-                <th className="text-center">Estado</th>
-                <th className="text-center pe-4">Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredClientes.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="text-center py-5">
-                    <div className="py-4">
-                      <i className="fas fa-search fa-3x text-muted mb-3 opacity-25"></i>
-                      <h5 className="text-muted fw-bold">No se encontraron coincidencias</h5>
-                      <p className="text-muted small">Intenta con otros términos de búsqueda.</p>
-                    </div>
-                  </td>
-                </tr>
-              ) : filteredClientes.map(c => (
-                <tr className="animate__animated animate__fadeIn" key={c.cli_id}>
-                  <td className="ps-4 text-secondary fw-bold">#{c.cli_id}</td>
-                  <td className="py-3">
-                    <div className="d-flex align-items-center">
-                      <div className="avatar-circle me-3">{getAvatar(c.cli_nombre)}</div>
-                      <div className="d-flex flex-column">
-                        <span className="text-dark fw-bold mb-0">{c.cli_nombre}</span>
-                        <span className="text-xs text-muted small">{c.cli_correo}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <span className={`status-badge ${c.cli_estado ? 'status-active' : 'status-inactive'}`}>
-                      {c.cli_estado ? <><i className="fas fa-check-circle me-1"></i>Activo</> : <><i className="fas fa-ban me-1"></i>Inactivo</>}
-                    </span>
-                  </td>
-                  <td className="text-center pe-4">
-
-                    <button type="button" className="btn btn-sm btn-outline-warning fw-bold px-3 py-1 me-2" onClick={() => handleEdit(c)}>
-                      <i className="fas fa-edit"></i> Editar
-                    </button>
-                    <button type="button" className="btn btn-sm btn-outline-danger fw-bold px-3 py-1" onClick={() => handleDelete(c.cli_id)}>
-                      <i className="fas fa-trash"></i> Eliminar
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => { setShowModal(true); setEditId(null); setForm(initialForm); }}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-200 flex items-center gap-2 whitespace-nowrap transition-colors"
+          >
+            <i className="fas fa-user-plus"></i> Nuevo Cliente
+          </motion.button>
         </div>
       </div>
 
-      {/* Modal Cliente */}
-      {showModal && (
-        <div className="modal fade show" style={{ display: 'block', background: 'rgba(0,0,0,0.2)' }} tabIndex="-1">
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content shadow-lg">
-              <div className="modal-header border-0 pt-4 px-4">
-                <h5 className="modal-title fw-bold text-dark"><i className="fas fa-user-plus text-primary me-2"></i>{editId ? 'Editar Cliente' : 'Nuevo Cliente'}</h5>
-                <button type="button" className="btn-close" onClick={() => { setShowModal(false); setEditId(null); setForm(initialForm); }}></button>
-              </div>
-              <form onSubmit={handleSubmit}>
-                <div className="modal-body p-4">
-                  <div className="alert alert-info border-0 bg-light d-flex align-items-center mb-4">
-                    <i className="fas fa-database me-2"></i>
-                    <small>Registrando Cliente</small>
+      {/* Clients Grid */}
+      <motion.div
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 1 }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+        {filteredClientes.length === 0 ? (
+          <div className="col-span-full flex flex-col items-center justify-center p-12 bg-white rounded-2xl shadow-sm border border-gray-100">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-gray-400">
+              <i className="fas fa-users-slash text-2xl"></i>
+            </div>
+            <p className="text-lg font-medium text-gray-900">No se encontraron clientes</p>
+            <p className="text-sm text-gray-500">Intenta con otros términos de búsqueda.</p>
+          </div>
+        ) : (
+          filteredClientes.map(c => (
+            <motion.div
+              key={c.cli_id}
+              variants={itemVariants}
+              className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 group"
+            >
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold shadow-sm">
+                    {getAvatar(c.cli_nombre)}
                   </div>
-                  <div className="row g-3">
-                    <div className="col-12">
-                      <label className="form-label fw-bold small text-muted">Nombre del Cliente (cli_nombre) <span className="text-danger">*</span></label>
-                      <input type="text" name="cli_nombre" className="form-control" placeholder="Ej: Juan Pérez" required value={form.cli_nombre} onChange={handleChange} />
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${c.cli_estado ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-gray-100 text-gray-600 border border-gray-200'}`}>
+                    {c.cli_estado ? 'Activo' : 'Inactivo'}
+                  </span>
+                </div>
+
+                <h3 className="text-lg font-bold text-gray-900 mb-1">{c.cli_nombre}</h3>
+                <p className="text-gray-500 text-sm mb-6 flex items-center gap-2">
+                  <i className="fas fa-envelope text-gray-400"></i> {c.cli_correo}
+                </p>
+
+                <div className="flex gap-2 pt-4 border-t border-gray-100">
+                  <button
+                    onClick={() => handleEdit(c)}
+                    className="flex-1 py-2 rounded-lg bg-gray-50 text-gray-600 font-medium hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <i className="fas fa-edit"></i> Editar
+                  </button>
+                  <button
+                    onClick={() => handleDelete(c.cli_id)}
+                    className="flex-1 py-2 rounded-lg bg-gray-50 text-gray-600 font-medium hover:bg-red-50 hover:text-red-600 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <i className="fas fa-trash"></i> Eliminar
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          ))
+        )}
+      </motion.div>
+
+      {/* Modal Form */}
+      <AnimatePresence>
+        {showModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+              onClick={() => setShowModal(false)}
+            ></motion.div>
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative z-50"
+            >
+              <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <i className="fas fa-user-circle text-indigo-600"></i>
+                  {editId ? 'Editar Cliente' : 'Nuevo Cliente'}
+                </h3>
+                <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
+                  <i className="fas fa-times text-xl"></i>
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit} className="p-6">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre del Cliente <span className="text-red-500">*</span></label>
+                    <div className="relative">
+                      <i className="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                      <input
+                        type="text"
+                        name="cli_nombre"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50 transition-all"
+                        placeholder="Ej: Juan Pérez"
+                        required
+                        value={form.cli_nombre}
+                        onChange={handleChange}
+                      />
                     </div>
-                    <div className="col-12">
-                      <label className="form-label fw-bold small text-muted">Correo Electrónico (cli_correo) <span className="text-danger">*</span></label>
-                      <input type="email" name="cli_correo" className="form-control" placeholder="juan@correo.com" required value={form.cli_correo} onChange={handleChange} />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Correo Electrónico <span className="text-red-500">*</span></label>
+                    <div className="relative">
+                      <i className="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                      <input
+                        type="email"
+                        name="cli_correo"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50 transition-all"
+                        placeholder="juan@correo.com"
+                        required
+                        value={form.cli_correo}
+                        onChange={handleChange}
+                      />
                     </div>
-                    <div className="col-12">
-                      <label className="form-label fw-bold small text-muted">Estado del Cliente (cli_estado) <span className="text-danger">*</span></label>
-                      <select name="cli_estado" className="form-select" value={form.cli_estado ? 'true' : 'false'} onChange={e => setForm(f => ({ ...f, cli_estado: e.target.value === 'true' }))}>
-                        <option value="true">Activo (TRUE)</option>
-                        <option value="false">Inactivo (FALSE)</option>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Estado</label>
+                    <div className="relative">
+                      <i className="fas fa-toggle-on absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                      <select
+                        name="cli_estado"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50 transition-all appearance-none"
+                        value={form.cli_estado ? 'true' : 'false'}
+                        onChange={e => setForm(f => ({ ...f, cli_estado: e.target.value === 'true' }))}
+                      >
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
                       </select>
+                      <i className="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
                     </div>
                   </div>
                 </div>
-                <div className="modal-footer border-0 pb-4 px-4">
-                  <button type="button" className="btn btn-light rounded-pill px-4 fw-bold" onClick={() => { setShowModal(false); setEditId(null); setForm(initialForm); }}>Cancelar</button>
-                  <button type="submit" className="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" disabled={loading}>
-                    <i className="fas fa-save me-2"></i> Guardar
+
+                <div className="mt-8 flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                    className="px-6 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-white hover:border-gray-400 transition-all"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="px-8 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    {loading ? 'Guardando...' : 'Guardar'}
                   </button>
                 </div>
               </form>
-            </div>
+            </motion.div>
           </div>
-        </div>
-      )}
-
-      {/* Custom styles for Bootstrap and table */}
-      <style>{`
-        :root {
-            --pizzeria-primary: #0d6efd;
-            --pizzeria-success: #198754;
-            --pizzeria-bg: #f4f7f6;
-        }
-        body {
-            background-color: var(--pizzeria-bg);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .rounded-4 { border-radius: 1rem !important; }
-        .table-container {
-            background: white;
-            border-radius: 1rem;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            overflow: hidden;
-        }
-        .table thead th {
-            background-color: #f8f9fa;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 700;
-            color: #6c757d;
-            border-bottom: 1px solid #edf2f7;
-            padding: 1rem;
-        }
-        .table tbody tr {
-            transition: background-color 0.2s ease;
-        }
-        .table tbody tr:hover {
-            background-color: #fdfdfd;
-        }
-        .avatar-circle {
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background-color: rgba(13, 110, 253, 0.1);
-            color: var(--pizzeria-primary);
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-        .search-container {
-            position: relative;
-        }
-        .search-container .form-control {
-            padding-left: 3rem;
-            height: 3.5rem;
-            border-radius: 0.75rem;
-            border: 1px solid #e2e8f0;
-            background-color: #f8fafc;
-        }
-        .search-container .search-icon {
-            position: absolute;
-            left: 1.25rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 1.2rem;
-        }
-        .btn-select-client {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 50px;
-        }
-        .btn-select-client:hover {
-            transform: translateX(5px);
-            background-color: var(--pizzeria-primary);
-            color: white;
-        }
-        .modal-content {
-            border: none;
-            border-radius: 1.25rem;
-        }
-        .status-badge {
-            font-size: 0.8rem;
-            padding: 0.35em 0.8em;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-        .status-active {
-            background-color: rgba(25, 135, 84, 0.1);
-            color: #198754;
-            border: 1px solid rgba(25, 135, 84, 0.2);
-        }
-        .status-inactive {
-            background-color: rgba(108, 117, 125, 0.1);
-            color: #6c757d;
-            border: 1px solid rgba(108, 117, 125, 0.2);
-        }
-      `}</style>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

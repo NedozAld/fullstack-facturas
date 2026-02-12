@@ -1,256 +1,257 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Card, Button, Table, Badge, Modal, Form } from 'react-bootstrap';
 import { getUsuarios, createUsuario, updateUsuario, deleteUsuario } from './apiUsuario';
-import { getClientes } from './apiFactura'; // To optionally link to a client
+import { motion, AnimatePresence } from 'framer-motion';
 
-const initialForm = {
-    usu_username: '',
-    usu_password: '',
-    usu_rol: 'cliente',
-    cli_id: ''
-};
+const initialForm = { usu_username: '', usu_password: '', usu_rol: 'Empleado' };
 
-const Usuarios = () => {
+export default function Usuarios() {
     const [usuarios, setUsuarios] = useState([]);
-    const [clientes, setClientes] = useState([]);
     const [form, setForm] = useState(initialForm);
     const [editId, setEditId] = useState(null);
-    const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [search, setSearch] = useState('');
+    const [showModal, setShowModal] = useState(false);
+
+    const fetchUsuarios = async () => {
+        try {
+            const res = await getUsuarios();
+            setUsuarios(res.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const [resUsuarios, resClientes] = await Promise.all([
-                    getUsuarios(),
-                    getClientes()
-                ]);
-                setUsuarios(resUsuarios.data);
-                setClientes(resClientes.data);
-            } catch (error) {
-                console.error('Error al cargar datos', error);
-            }
-            setLoading(false);
-        };
-        fetchData();
+        fetchUsuarios();
     }, []);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
+    const handleChange = e => {
+        setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const loadData = async () => {
-        setLoading(true);
-        try {
-            const [resUsuarios, resClientes] = await Promise.all([
-                getUsuarios(),
-                getClientes()
-            ]);
-            setUsuarios(resUsuarios.data);
-            setClientes(resClientes.data);
-        } catch (error) {
-            console.error('Error al cargar datos', error);
-        }
-        setLoading(false);
-    };
-
-    const handleSubmit = async (e) => {
+    const handleSubmit = async e => {
         e.preventDefault();
         setLoading(true);
         try {
-            const dataToSave = {
-                ...form,
-                cli_id: form.cli_id || null // Ensure null if empty string
-            };
-
             if (editId) {
-                await updateUsuario(editId, dataToSave);
+                await updateUsuario(editId, form);
             } else {
-                await createUsuario(dataToSave);
+                await createUsuario(form);
             }
-            setShowModal(false);
             setForm(initialForm);
             setEditId(null);
-            loadData();
+            setShowModal(false);
+            fetchUsuarios();
         } catch (error) {
-            console.error('Error al guardar usuario', error);
-            alert('Error al guardar usuario. Verifique si el usuario ya existe.');
+            console.error(error);
         }
         setLoading(false);
     };
 
-    const handleEdit = (usuario) => {
-        setForm({
-            usu_username: usuario.usu_username,
-            usu_password: usuario.usu_password, // Taking plain text for now as per model
-            usu_rol: usuario.usu_rol || 'cliente',
-            cli_id: usuario.cli_id || ''
-        });
-        setEditId(usuario.usu_id);
+    const handleEdit = user => {
+        setForm({ ...user, usu_password: '' }); // Don't show password
+        setEditId(user.usu_id);
         setShowModal(true);
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm('¿Está seguro de eliminar este usuario?')) return;
-        setLoading(true);
+    const handleDelete = async id => {
+        if (!window.confirm('¿Eliminar usuario?')) return;
         try {
             await deleteUsuario(id);
-            loadData();
+            fetchUsuarios();
         } catch (error) {
-            console.error('Error al eliminar usuario', error);
-        }
-        setLoading(false);
-    };
-
-    const getRoleBadge = (rol) => {
-        switch (rol) {
-            case 'admin': return <Badge bg="purple" style={{ backgroundColor: '#805ad5' }}>Administrador</Badge>;
-            case 'cliente': return <Badge bg="info" text="dark">Cliente</Badge>;
-            default: return <Badge bg="secondary">{rol}</Badge>;
+            console.error(error);
         }
     };
 
-    const filteredUsuarios = usuarios.filter(u =>
-        u.usu_username.toLowerCase().includes(search.toLowerCase())
-    );
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { y: 20, opacity: 0 },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: { type: 'spring', stiffness: 100 }
+        }
+    };
 
     return (
-        <Container fluid className="py-4 animate__animated animate__fadeIn">
-            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-
-            <div className="d-flex justify-content-between align-items-center mb-4">
+        <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <div>
-                    <h4 className="fw-bold text-dark mb-0"><i className="fas fa-users-cog text-primary me-2"></i>Gestión de Usuarios</h4>
-                    <p className="text-muted mb-0 small">Administra el acceso y roles del sistema.</p>
+                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Gestión de Usuarios</h1>
+                    <p className="text-gray-500 mt-1">Administra el acceso y roles del sistema.</p>
                 </div>
-                <Button variant="primary" className="rounded-pill px-4 shadow-sm fw-bold" onClick={() => { setShowModal(true); setForm(initialForm); setEditId(null); }}>
-                    <i className="fas fa-user-plus me-2"></i> Nuevo Usuario
-                </Button>
+                <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => { setShowModal(true); setEditId(null); setForm(initialForm); }}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-200 flex items-center gap-2 whitespace-nowrap transition-colors"
+                >
+                    <i className="fas fa-user-plus"></i> Nuevo Usuario
+                </motion.button>
             </div>
 
-            <Card className="shadow-sm border-0 rounded-3 overflow-hidden">
-                <Card.Header className="bg-white py-3 border-bottom">
-                    <div className="input-group" style={{ maxWidth: '300px' }}>
-                        <span className="input-group-text bg-light border-end-0 border">
-                            <i className="fas fa-search text-muted"></i>
-                        </span>
-                        <input
-                            type="text"
-                            className="form-control border-start-0 bg-light border"
-                            placeholder="Buscar usuario..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
+            {/* Users Grid */}
+            {/* Users Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                {usuarios.length === 0 ? (
+                    <div className="col-span-full flex flex-col items-center justify-center p-12 bg-white rounded-2xl shadow-sm border border-gray-100">
+                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-gray-400">
+                            <i className="fas fa-users-slash text-2xl"></i>
+                        </div>
+                        <p className="text-lg font-medium text-gray-900">No hay usuarios registrados</p>
                     </div>
-                </Card.Header>
-                <Table responsive hover className="mb-0 align-middle">
-                    <thead className="bg-light text-secondary small text-uppercase">
-                        <tr>
-                            <th className="border-0 py-3 ps-4">Usuario</th>
-                            <th className="border-0 py-3">Rol</th>
-                            <th className="border-0 py-3">Cliente Asociado</th>
-                            <th className="border-0 py-3 text-end pe-4">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredUsuarios.map(u => (
-                            <tr key={u.usu_id}>
-                                <td className="ps-4">
-                                    <div className="d-flex align-items-center">
-                                        <div className={`avatar-small me-3 text-white rounded-circle d-flex align-items-center justify-content-center ${u.usu_rol === 'admin' ? 'bg-primary' : 'bg-secondary'}`} style={{ width: '35px', height: '35px' }}>
-                                            {u.usu_username.charAt(0).toUpperCase()}
-                                        </div>
-                                        <div>
-                                            <div className="fw-bold text-dark">{u.usu_username}</div>
+                ) : (
+                    usuarios.map(u => (
+                        <div
+                            key={u.usu_id}
+                            className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 group"
+                        >
+                            <div className="p-6">
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl text-white shadow-lg ${u.usu_rol === 'Admin' ? 'bg-indigo-600 shadow-indigo-200' : 'bg-emerald-500 shadow-emerald-200'}`}>
+                                        <i className={`fas ${u.usu_rol === 'Admin' ? 'fa-user-shield' : 'fa-user'}`}></i>
+                                    </div>
+                                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${u.usu_rol === 'Admin' ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'}`}>
+                                        {u.usu_rol || 'Empleado'}
+                                    </span>
+                                </div>
+
+                                <h3 className="text-lg font-bold text-gray-900 mb-1">{u.usu_username}</h3>
+                                <p className="text-gray-500 text-sm mb-6 flex items-center gap-2">
+                                    <i className="fas fa-id-badge text-gray-400"></i> ID: {u.usu_id}
+                                    {u.Cliente && <span className="text-xs bg-gray-100 px-2 py-0.5 rounded-full ml-2">{u.Cliente.cli_nombre}</span>}
+                                </p>
+
+                                <div className="flex gap-2 pt-4 border-t border-gray-100">
+                                    <button
+                                        onClick={() => handleEdit(u)}
+                                        className="flex-1 py-2 rounded-lg bg-gray-50 text-gray-600 font-medium hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        <i className="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(u.usu_id)}
+                                        className="flex-1 py-2 rounded-lg bg-gray-50 text-gray-600 font-medium hover:bg-red-50 hover:text-red-600 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        <i className="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
+
+            {/* Modal Form */}
+            <AnimatePresence>
+                {showModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+                            onClick={() => setShowModal(false)}
+                        ></motion.div>
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                            className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative z-50"
+                        >
+                            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                    <i className="fas fa-user-circle text-indigo-600"></i>
+                                    {editId ? 'Editar Usuario' : 'Nuevo Usuario'}
+                                </h3>
+                                <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
+                                    <i className="fas fa-times text-xl"></i>
+                                </button>
+                            </div>
+
+                            <form onSubmit={handleSubmit} className="p-6">
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-1">Usuario <span className="text-red-500">*</span></label>
+                                        <div className="relative">
+                                            <i className="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                            <input
+                                                type="text"
+                                                name="usu_username"
+                                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50 transition-all"
+                                                placeholder="Ej: jsmith"
+                                                required
+                                                value={form.usu_username}
+                                                onChange={handleChange}
+                                            />
                                         </div>
                                     </div>
-                                </td>
-                                <td>{getRoleBadge(u.usu_rol)}</td>
-                                <td>
-                                    {u.Cliente ? (
-                                        <span className="text-muted small"><i className="fas fa-user-tag me-1"></i>{u.Cliente.cli_nombre}</span>
-                                    ) : <span className="text-muted small">-</span>}
-                                </td>
-                                <td className="text-end pe-4">
-                                    <Button variant="link" className="text-warning p-0 me-3" onClick={() => handleEdit(u)} title="Editar"><i className="fas fa-edit"></i></Button>
-                                    <Button variant="link" className="text-danger p-0" onClick={() => handleDelete(u.usu_id)} title="Eliminar"><i className="fas fa-trash"></i></Button>
-                                </td>
-                            </tr>
-                        ))}
-                        {filteredUsuarios.length === 0 && (
-                            <tr>
-                                <td colSpan="4" className="text-center py-5 text-muted">No se encontraron usuarios.</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </Table>
-            </Card>
 
-            {/* Modal Crear/Editar */}
-            <Modal show={showModal} onHide={() => setShowModal(false)} centered backdrop="static">
-                <Modal.Header closeButton className="border-0">
-                    <Modal.Title className="fw-bold text-dark h5">
-                        <i className={`fas ${editId ? 'fa-user-edit' : 'fa-user-plus'} text-primary me-2`}></i>
-                        {editId ? 'Editar Usuario' : 'Nuevo Usuario'}
-                    </Modal.Title>
-                </Modal.Header>
-                <Form onSubmit={handleSubmit}>
-                    <Modal.Body className="pt-0">
-                        <div className="mb-3">
-                            <Form.Label className="small fw-bold text-muted">Nombre de Usuario <span className="text-danger">*</span></Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="usu_username"
-                                required
-                                value={form.usu_username}
-                                onChange={handleChange}
-                                placeholder="Ej: admin"
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <Form.Label className="small fw-bold text-muted">Contraseña <span className="text-danger">*</span></Form.Label>
-                            <Form.Control
-                                type="text" // Using text to see password as per typical simple internal apps, or password type
-                                name="usu_password"
-                                required
-                                value={form.usu_password}
-                                onChange={handleChange}
-                                placeholder="Ingrese contraseña"
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <Form.Label className="small fw-bold text-muted">Rol <span className="text-danger">*</span></Form.Label>
-                            <Form.Select name="usu_rol" value={form.usu_rol} onChange={handleChange} required>
-                                <option value="cliente">Cliente</option>
-                                <option value="admin">Administrador</option>
-                            </Form.Select>
-                        </div>
-                        <div className="mb-3">
-                            <Form.Label className="small fw-bold text-muted">Asociar a Cliente (Opcional)</Form.Label>
-                            <Form.Select name="cli_id" value={form.cli_id} onChange={handleChange}>
-                                <option value="">-- Ninguno --</option>
-                                {clientes.map(c => (
-                                    <option key={c.cli_id} value={c.cli_id}>{c.cli_nombre}</option>
-                                ))}
-                            </Form.Select>
-                            <Form.Text className="text-muted small">
-                                Si el rol es 'Cliente', es recomendable asociarlo a un registro de cliente.
-                            </Form.Text>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer className="border-0">
-                        <Button variant="light" onClick={() => setShowModal(false)} className="rounded-pill px-4 fw-bold border">Cancelar</Button>
-                        <Button variant="primary" type="submit" className="rounded-pill px-4 fw-bold shadow-sm">
-                            Guardar
-                        </Button>
-                    </Modal.Footer>
-                </Form>
-            </Modal>
-        </Container>
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-1">Contraseña {editId && <span className="text-xs font-normal text-gray-500">(Dejar en blanco para mantener)</span>}</label>
+                                        <div className="relative">
+                                            <i className="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                            <input
+                                                type="password"
+                                                name="usu_password"
+                                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50 transition-all"
+                                                placeholder="••••••••"
+                                                required={!editId}
+                                                value={form.usu_password}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-1">Rol</label>
+                                        <div className="relative">
+                                            <i className="fas fa-user-tag absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                            <select
+                                                name="usu_rol"
+                                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50 transition-all appearance-none"
+                                                value={form.usu_rol}
+                                                onChange={handleChange}
+                                            >
+                                                <option value="Empleado">Empleado</option>
+                                                <option value="Admin">Administrador</option>
+                                            </select>
+                                            <i className="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="mt-8 flex justify-end gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowModal(false)}
+                                        className="px-6 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-white hover:border-gray-400 transition-all"
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        className="px-8 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
+                                    >
+                                        {loading ? 'Guardando...' : 'Guardar'}
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+        </div>
     );
-};
-
-export default Usuarios;
+}

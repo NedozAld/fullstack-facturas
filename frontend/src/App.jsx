@@ -1,6 +1,6 @@
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 import './App.css';
 import Login from './Login';
 import Dashboard from './Dashboard';
@@ -11,6 +11,7 @@ import Usuarios from './Usuarios';
 import ProtectedRoute from './ProtectedRoute';
 
 function App() {
+  console.log('App component mounting...');
   return (
     <BrowserRouter>
       <Routes>
