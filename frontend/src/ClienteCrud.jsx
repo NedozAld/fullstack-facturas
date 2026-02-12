@@ -25,7 +25,7 @@ export default function ClienteCrud() {
 
   useEffect(() => {
     fetchClientes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   const handleChange = e => {
@@ -102,7 +102,7 @@ export default function ClienteCrud() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Header */}
+
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Gestión de Clientes</h1>
@@ -130,7 +130,7 @@ export default function ClienteCrud() {
         </div>
       </div>
 
-      {/* Clients Grid */}
+
       <motion.div
         initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
@@ -186,7 +186,7 @@ export default function ClienteCrud() {
         )}
       </motion.div>
 
-      {/* Modal Form */}
+
       <AnimatePresence>
         {showModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

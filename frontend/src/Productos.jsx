@@ -32,7 +32,7 @@ export default function Productos() {
 
     useEffect(() => {
         fetchProductos();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, []);
 
     const handleChange = e => {
@@ -107,7 +107,7 @@ export default function Productos() {
 
     return (
         <div className="max-w-7xl mx-auto">
-            {/* Header */}
+
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Inventario de Productos</h1>
@@ -135,7 +135,7 @@ export default function Productos() {
                 </div>
             </div>
 
-            {/* Products List */}
+
             <motion.div
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 1 }}
@@ -214,7 +214,7 @@ export default function Productos() {
                 </div>
             </motion.div>
 
-            {/* Modal Form */}
+
             <AnimatePresence>
                 {showModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

@@ -5,15 +5,15 @@ const router = Router();
 const facturaController = require('../controllers/factura-controller');
 const clienteProductoController = require('../controllers/cliente-producto-controller');
 
-// Ruta principal
+
 router.get('/', (req, res) => {
     res.send('Bienvenido a mi API de facturación');
 });
 
-// ============ RUTAS DE AUTENTICACION ============
+
 router.use('/', require('./auth-routes'));
 
-// ============ RUTAS DE FACTURAS ============
+
 router.post('/facturas', facturaController.createFactura);
 router.put('/facturas/:facId', facturaController.updateFactura);
 router.delete('/facturas/:facId', facturaController.deleteFactura);
@@ -30,14 +30,14 @@ router.get('/consultas/cliente/:cliId/facturas-productos', facturaController.fac
 module.exports = router;
 
 
-// ============ RUTAS DE CLIENTES ============
+
 router.post('/clientes', clienteProductoController.createCliente);
 router.put('/clientes/:cliId', clienteProductoController.updateCliente);
 router.delete('/clientes/:cliId', clienteProductoController.deleteCliente);
 router.get('/clientes', clienteProductoController.getClientes);
 router.get('/clientes/:cliId', clienteProductoController.getClienteById);
 
-// ============ RUTAS DE PRODUCTOS ============
+
 router.post('/productos', clienteProductoController.createProducto);
 router.put('/productos/:proId', clienteProductoController.updateProducto);
 router.delete('/productos/:proId', clienteProductoController.deleteProducto);
@@ -47,7 +47,7 @@ router.get('/productos/:proId', clienteProductoController.getProductoById);
 
 const usuarioController = require('../controllers/usuario-controller');
 
-// ============ RUTAS DE USUARIOS ============
+
 router.post('/usuarios', usuarioController.createUsuario);
 router.get('/usuarios', usuarioController.getUsuarios);
 router.get('/usuarios/:id', usuarioController.getUsuarioById);

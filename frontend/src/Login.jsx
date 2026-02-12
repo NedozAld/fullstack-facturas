@@ -38,7 +38,7 @@ const Login = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 relative overflow-hidden">
-            {/* Background decoration */}
+
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
                 <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-indigo-200/30 rounded-full blur-3xl"></div>
                 <div className="absolute top-[20%] -right-[5%] w-[30%] h-[30%] bg-emerald-200/30 rounded-full blur-3xl"></div>

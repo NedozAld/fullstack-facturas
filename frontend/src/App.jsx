@@ -17,14 +17,14 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
 
-        {/* Protected Routes */}
+
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Dashboard />}>
             <Route index element={<ClienteCrud />} />
             <Route path="productos" element={<Productos />} />
             <Route path="facturas" element={<Facturas />} />
 
-            {/* Admin only route */}
+
             <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
               <Route path="usuarios" element={<Usuarios />} />
             </Route>

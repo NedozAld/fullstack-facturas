@@ -43,7 +43,7 @@ export default function Facturas() {
 
     useEffect(() => {
         fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, []);
 
     const handleChange = e => {
@@ -251,7 +251,7 @@ export default function Facturas() {
             const details = res.data;
             const doc = new jsPDF();
 
-            // Header
+
             doc.setFontSize(20);
             doc.text('FACTURA', 105, 20, { align: 'center' });
 
@@ -261,7 +261,7 @@ export default function Facturas() {
             doc.text(`Cliente: ${factura.Cliente?.cli_nombre || 'Desconocido'}`, 14, 42);
             doc.text(`Correo: ${factura.Cliente?.cli_correo || 'N/A'}`, 14, 48);
 
-            // Table
+
             const tableColumn = ["Producto", "Cant.", "Precio Unit.", "Impuesto %", "Total"];
             const tableRows = [];
 
@@ -357,7 +357,7 @@ export default function Facturas() {
 
     return (
         <div className="max-w-7xl mx-auto">
-            {/* Header with Search and Action */}
+
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Historial de Facturación</h1>
@@ -391,7 +391,7 @@ export default function Facturas() {
                 </div>
             </div>
 
-            {/* Invoices Grid/List */}
+
             <motion.div
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 1 }}
@@ -470,7 +470,7 @@ export default function Facturas() {
                 </div>
             </motion.div>
 
-            {/* Modal Form */}
+
             <AnimatePresence>
                 {showModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -641,7 +641,7 @@ export default function Facturas() {
                 )}
             </AnimatePresence>
 
-            {/* Details Modal */}
+
             <AnimatePresence>
                 {showDetailsModal && invoiceDetails && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

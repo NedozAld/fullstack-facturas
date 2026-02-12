@@ -7,7 +7,7 @@ const Dashboard = () => {
     const location = useLocation();
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-    const [backendStatus, setBackendStatus] = useState('checking'); // 'connected', 'disconnected', 'checking'
+    const [backendStatus, setBackendStatus] = useState('checking');
 
     useEffect(() => {
         const checkBackend = async () => {
@@ -41,7 +41,7 @@ const Dashboard = () => {
 
     return (
         <div className="flex min-h-screen bg-gray-50 font-sans">
-            {/* Sidebar */}
+
             <motion.div
                 initial={{ x: -280 }}
                 animate={{ x: 0 }}
@@ -99,9 +99,9 @@ const Dashboard = () => {
                 </div>
             </motion.div>
 
-            {/* Main Content */}
+
             <div className="flex-1 flex flex-col h-screen overflow-hidden">
-                {/* Topbar */}
+
                 <header className="bg-white/80 border-b border-gray-200 py-4 px-8 backdrop-blur-md sticky top-0 z-10 flex justify-between items-center">
                     <div>
                         <h2 className="text-2xl font-bold text-gray-800">

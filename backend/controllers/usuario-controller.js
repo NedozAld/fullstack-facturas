@@ -1,11 +1,11 @@
 const { Usuario, Cliente } = require('../models');
 
-// Crear un nuevo usuario
+
 exports.createUsuario = async (req, res) => {
     try {
         const { usu_username, usu_password, usu_rol, cli_id } = req.body;
 
-        // Verificar si el usuario ya existe
+
         const existingUser = await Usuario.findOne({ where: { usu_username } });
         if (existingUser) {
             return res.status(400).json({ error: 'El nombre de usuario ya está en uso' });
@@ -13,7 +13,7 @@ exports.createUsuario = async (req, res) => {
 
         const nuevoUsuario = await Usuario.create({
             usu_username,
-            usu_password, // En un entorno real, esto debería estar hasheado
+            usu_password,
             usu_rol,
             cli_id: cli_id || null
         });
@@ -25,11 +25,11 @@ exports.createUsuario = async (req, res) => {
     }
 };
 
-// Obtener todos los usuarios
+
 exports.getUsuarios = async (req, res) => {
     try {
         const usuarios = await Usuario.findAll({
-            include: [{ model: Cliente }] // Incluir datos del cliente asociado si existe
+            include: [{ model: Cliente }]
         });
         console.log('Usuarios found:', JSON.stringify(usuarios, null, 2));
         res.json(usuarios);
@@ -39,7 +39,6 @@ exports.getUsuarios = async (req, res) => {
     }
 };
 
-// Obtener un usuario por ID
 exports.getUsuarioById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -57,7 +56,7 @@ exports.getUsuarioById = async (req, res) => {
     }
 };
 
-// Actualizar un usuario
+
 exports.updateUsuario = async (req, res) => {
     try {
         const { id } = req.params;
@@ -70,7 +69,7 @@ exports.updateUsuario = async (req, res) => {
 
         await usuario.update({
             usu_username,
-            usu_password, // Si se envía nueva contraseña
+            usu_password,
             usu_rol,
             cli_id: cli_id || null
         });
@@ -82,7 +81,7 @@ exports.updateUsuario = async (req, res) => {
     }
 };
 
-// Eliminar un usuario
+
 exports.deleteUsuario = async (req, res) => {
     try {
         const { id } = req.params;

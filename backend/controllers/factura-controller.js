@@ -1,7 +1,7 @@
 
 const { Factura, Cliente, Producto, FacturaProducto } = require('../models');
 
-// Crear factura
+
 async function createFactura(req, res) {
     const { cli_id, fac_fecha } = req.body;
     try {
@@ -12,7 +12,7 @@ async function createFactura(req, res) {
     }
 }
 
-// Actualizar factura
+
 async function updateFactura(req, res) {
     const facId = parseInt(req.params.facId, 10);
     const { cli_id, fac_fecha } = req.body;
@@ -29,7 +29,7 @@ async function updateFactura(req, res) {
     }
 }
 
-// Eliminar factura
+
 async function deleteFactura(req, res) {
     const facId = parseInt(req.params.facId, 10);
     try {
@@ -42,7 +42,7 @@ async function deleteFactura(req, res) {
     }
 }
 
-// Listar facturas
+
 async function getFacturas(req, res) {
     try {
         const facturas = await Factura.findAll({ order: [['fac_id', 'ASC']] });
@@ -53,7 +53,7 @@ async function getFacturas(req, res) {
 }
 
 
-// Obtener factura por ID
+
 async function getFacturaById(req, res) {
     const facId = parseInt(req.params.facId, 10);
     try {
@@ -67,7 +67,7 @@ async function getFacturaById(req, res) {
 
 
 
-// Asignar producto a factura
+
 async function addProductoToFactura(req, res) {
     const facId = parseInt(req.params.facId, 10);
     const { pro_id, facpro_cantidad, facpro_pvp = null } = req.body;
@@ -88,7 +88,7 @@ async function addProductoToFactura(req, res) {
 
 
 
-// Eliminar producto de factura
+
 async function removeProductoFromFactura(req, res) {
     const facId = parseInt(req.params.facId, 10);
     const proId = parseInt(req.params.proId, 10);
@@ -102,7 +102,7 @@ async function removeProductoFromFactura(req, res) {
     }
 }
 
-// Consultar los clientes y sus facturas
+
 async function clientesFacturas(req, res) {
     try {
         const rows = await Factura.findAll({
@@ -115,7 +115,7 @@ async function clientesFacturas(req, res) {
     }
 }
 
-// Consultar una factura y sus productos
+
 async function facturaProductosById(req, res) {
     const facId = parseInt(req.params.facId, 10);
     try {
@@ -129,7 +129,7 @@ async function facturaProductosById(req, res) {
     }
 }
 
-// Consultar las facturas con sus productos, de un cliente
+
 async function facturasProductosByCliente(req, res) {
     const cliId = parseInt(req.params.cliId, 10);
     try {

@@ -48,7 +48,7 @@ export default function Usuarios() {
     };
 
     const handleEdit = user => {
-        setForm({ ...user, usu_password: '' }); // Don't show password
+        setForm({ ...user, usu_password: '' });
         setEditId(user.usu_id);
         setShowModal(true);
     };
@@ -84,7 +84,7 @@ export default function Usuarios() {
 
     return (
         <div className="max-w-7xl mx-auto">
-            {/* Header */}
+
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Gestión de Usuarios</h1>
@@ -100,8 +100,8 @@ export default function Usuarios() {
                 </motion.button>
             </div>
 
-            {/* Users Grid */}
-            {/* Users Grid */}
+
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                 {usuarios.length === 0 ? (
@@ -153,7 +153,7 @@ export default function Usuarios() {
                 )}
             </div>
 
-            {/* Modal Form */}
+
             <AnimatePresence>
                 {showModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

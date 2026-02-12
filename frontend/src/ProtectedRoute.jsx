@@ -9,7 +9,7 @@ const ProtectedRoute = ({ allowedRoles = [] }) => {
     }
 
     if (allowedRoles.length > 0 && !allowedRoles.includes(user.rol)) {
-        // Redirect to dashboard if user has no permission but is logged in
+
         return <Navigate to="/" replace />;
     }
 

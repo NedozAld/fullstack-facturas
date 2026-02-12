@@ -1,24 +1,24 @@
-//packages
+
 const express = require('express')
 const cors = require('cors');
 const app = express()
 
-//middlewears
+
 app.use(cors());
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-//routes
+
 app.use(require('../routes/index'))
 const { sequelize } = require('../models');
 
-//service execution
+
 (async () => {
     try {
         await sequelize.authenticate();
         console.log('✅ Base de datos conectada correctamente');
 
-        await sequelize.sync(); // Opcional: sincronizar modelos (cuidado en producción)
+        await sequelize.sync();
         console.log('✅ Modelos sincronizados');
 
         app.listen(3000, () => {

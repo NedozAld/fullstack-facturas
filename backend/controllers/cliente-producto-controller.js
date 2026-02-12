@@ -1,7 +1,7 @@
 
 const { Cliente, Producto } = require('../models');
 
-// Crear cliente
+
 async function createCliente(req, res) {
     const { cli_nombre, cli_correo, cli_estado } = req.body;
     try {
@@ -12,7 +12,7 @@ async function createCliente(req, res) {
     }
 }
 
-// Actualizar cliente
+
 async function updateCliente(req, res) {
     const cliId = parseInt(req.params.cliId, 10);
     const { cli_nombre, cli_correo, cli_estado } = req.body;
@@ -30,7 +30,7 @@ async function updateCliente(req, res) {
     }
 }
 
-// Eliminar cliente
+
 async function deleteCliente(req, res) {
     const cliId = parseInt(req.params.cliId, 10);
     try {
@@ -43,7 +43,7 @@ async function deleteCliente(req, res) {
     }
 }
 
-// Listar clientes
+
 async function getClientes(req, res) {
     try {
         const clientes = await Cliente.findAll({ order: [['cli_id', 'ASC']] });
@@ -53,7 +53,7 @@ async function getClientes(req, res) {
     }
 }
 
-// Obtener cliente por ID
+
 async function getClienteById(req, res) {
     const cliId = parseInt(req.params.cliId, 10);
     try {
@@ -65,9 +65,9 @@ async function getClienteById(req, res) {
     }
 }
 
-// ================= PRODUCTOS =================
 
-// Crear producto
+
+
 async function createProducto(req, res) {
     const { pro_nombre, pro_pvp, pro_estado, pro_impuesto } = req.body;
     try {
@@ -78,7 +78,7 @@ async function createProducto(req, res) {
     }
 }
 
-// Actualizar producto
+
 async function updateProducto(req, res) {
     const proId = parseInt(req.params.proId, 10);
     const { pro_nombre, pro_pvp, pro_estado, pro_impuesto } = req.body;
@@ -97,7 +97,7 @@ async function updateProducto(req, res) {
     }
 }
 
-// Eliminar producto
+
 async function deleteProducto(req, res) {
     const proId = parseInt(req.params.proId, 10);
     try {
@@ -110,7 +110,7 @@ async function deleteProducto(req, res) {
     }
 }
 
-// Listar productos
+
 async function getProductos(req, res) {
     try {
         const productos = await Producto.findAll({ order: [['pro_id', 'ASC']] });
@@ -120,7 +120,7 @@ async function getProductos(req, res) {
     }
 }
 
-// Obtener producto por ID
+
 async function getProductoById(req, res) {
     const proId = parseInt(req.params.proId, 10);
     try {
